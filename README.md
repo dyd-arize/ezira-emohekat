@@ -65,15 +65,23 @@ Here are the guidelines for the application:
         poetry run flask run
         ```
     - [x] add docker-compose.yaml that includes postgres for local testing
-    - webapp fix
+    - [x] webapp fix
         - [x] re-organize webapp project structure
             - replace app.py with app module + run.py
             - add sqlalchemy as ORM, and models.py
         - [x] update `/` endpoint to query and show data
-        - remove the original insertion while-loop
+        - [x] remove the original insertion while-loop
             - add an `/insert` endpoint for data insertion
-            - make a script to insert through this endpoint as a client and run this script as a cronjob
-                - to replicate what implemented originally inserting every 5 seconds
+    - [x] make a standalone process to `curl` the `/insert` endpoint as client in every 5 secs
+        ```
+        while true; do \
+            curl -X POST http://127.0.0.1:5000/insert \
+                -H "Content-Type: application/json" \
+                -d '{"ts": "'"$(date -u +"%Y-%m-%dT%H:%M:%S.%3N")"'", "value": 42.5}'; \
+            sleep 5;
+        done;
+        ```
+        - to replicate what was implemented originally
     - improve webapp dockerfile, add gunicorn
 - event-driven ingestion
     - minio upload event hook

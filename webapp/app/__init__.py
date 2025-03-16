@@ -32,7 +32,7 @@ def create_app():
     # provision tables
     from . import models
 
-    logger.debug("Loading models: {}".format(models))
+    logger.debug("Loading {}...".format(models.__name__))
     with app.app_context():
         db.create_all()
 
