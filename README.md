@@ -44,3 +44,43 @@ Here are the guidelines for the application:
 - You can use any langage of your choice
 - Deliver your solution as if it was a professional project
 
+---
+
+## Action Items
+
+- dev improvement
+    - [x] add .gitignore(python)
+    - [x] setup pre-commit
+        - pre-commit hooks
+        - ruff
+        - github actions lint
+- webapp improvement
+    - [x] use poetry as package manager
+        - generate pyproject.yaml
+        - upgrade dependencies, remove original requirements.txt
+        - working with venv
+        ```
+        python -m venv .venv
+        poetry install --no-root
+        poetry run flask run
+        ```
+    - [x] add docker-compose.yaml that includes postgres for local testing
+    - webapp fix
+        - re-organize webapp project structure
+            - replace app.py with app module + run.py
+            - add sqlalchemy as ORM
+        - update `/` endpoint to query and show data
+        - remove the original insertion while-loop
+            - add an `/insert` endpoint for data insertion
+            - make a script to insert through this endpoint as a client and run this script as a cronjob
+                - to replicate what implemented originally inserting every 5 seconds
+    - improve webapp dockerfile, add gunicorn
+- event-driven ingestion
+    - minio upload event hook
+    - queue
+    - worker
+- create AWS account
+- deployment
+    - github actions, local test with act
+        - terraform for infra provision/teardown
+        - system deployment
