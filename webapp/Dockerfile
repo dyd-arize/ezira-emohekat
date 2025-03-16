@@ -1,16 +1,50 @@
-FROM ubuntu:20.04
-
-RUN apt-get update -y && \
-    apt-get install -y python3-pip python3-dev
-
-COPY ./requirements.txt /app/requirements.txt
+ARG PYVER
+FROM python:${PYVER}-slim AS builder
 
 WORKDIR /app
 
-RUN pip3 install -r requirements.txt
+# Install system dependencies required for building Python packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        curl \
+        # psycopg2 build dependencies
+        libpq-dev
 
-COPY . /app
+# Install Poetry
+RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PATH="/root/.local/bin:$PATH"
 
-ENTRYPOINT [ "python3" ]
+# Install dependencies to .venv to isolate them from the system python
+COPY pyproject.toml poetry.lock ./
+RUN python -m venv .venv
+ENV PATH="/app/.venv/bin:$PATH"
+RUN poetry install --no-root --without dev
 
-CMD [ "app.py" ]
+
+FROM python:${PYVER}-slim AS final
+
+WORKDIR /app
+
+
+# Install required runtime dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        # for healthcheck
+        curl \
+        # psycopg2 runtime dependencies
+        libpq5 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Copy .venv from the builder stage
+COPY --from=builder /app/.venv ./.venv
+ENV PATH="/app/.venv/bin:$PATH"
+# Copy the application code
+COPY . .
+
+# Expose the Flask port
+EXPOSE 5000
+# Run with gunicorn
+# CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:create_app()", "--workers", "9"]
+CMD ["flask", "run", "--host", "0.0.0.0", "--debug"]
+# CMD ["tail", "-f", "/dev/null"]

@@ -63,3 +63,18 @@ def setup_routes(app):
             return jsonify({"status": "error"}), 500
 
         return jsonify({"message": "Inserted!"}), 200
+
+    @app.route("/healthcheck", methods=["GET"])
+    def health_check():
+        """
+        Health check endpoint.
+
+        Test:
+        curl -X POST http://127.0.0.1:5000/healthcheck
+
+        Returns:
+            JSON response indicating success.
+            - On success: {"message": "Inserted!"}, HTTP 200.
+        """
+
+        return jsonify({"message": "Healthy!"}), 200

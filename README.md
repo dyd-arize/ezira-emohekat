@@ -72,17 +72,19 @@ Here are the guidelines for the application:
         - [x] update `/` endpoint to query and show data
         - [x] remove the original insertion while-loop
             - add an `/insert` endpoint for data insertion
+        - [x] add `/healthcheck` endpoint for readiness/liveness probe
     - [x] make a standalone process to `curl` the `/insert` endpoint as client in every 5 secs
         ```
-        while true; do \
+        while true; do
             curl -X POST http://127.0.0.1:5000/insert \
                 -H "Content-Type: application/json" \
-                -d '{"ts": "'"$(date -u +"%Y-%m-%dT%H:%M:%S.%3N")"'", "value": 42.5}'; \
+                -d '{"ts": "'"$(date -u +"%Y-%m-%dT%H:%M:%S.%3N")"'", "value": 42.5}';
             sleep 5;
-        done;
+        done
         ```
         - to replicate what was implemented originally
-    - improve webapp dockerfile, add gunicorn
+    - [x] improve webapp dockerfile, add gunicorn
+    - [ ] add unit and integration test with pytest
 - event-driven ingestion
     - minio upload event hook
     - queue

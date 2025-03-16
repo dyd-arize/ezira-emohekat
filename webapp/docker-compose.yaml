@@ -1,5 +1,4 @@
 services:
-
   db:
     image: postgres:latest
     container_name: webapp_db
@@ -8,18 +7,58 @@ services:
       - .env
     ports:
       - "5432:5432"
-#     volumes:
-#       - webapp_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 5s
+      retries: 3
+      start_period: 5s
+      timeout: 60s
+    volumes:
+      - webapp_db_data:/var/lib/postgresql/data
 
-  # web:
-  #   build: ./webapp
-  #   container_name: webapp
-  #   ports:
-  #     - "5000:5000"
-  #   depends_on:
-  #     - db
-  #   volumes:
-  #     - ./webapp:/app
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - PYVER=3.13
+    container_name: webapp
+    restart: always
+    env_file:
+      - .env
+    environment:
+      # Set to localhost in .env for local development without docker
+      - POSTGRES_HOST=db
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: curl --fail http://localhost:5000/healthcheck
+      interval: 5s
+      retries: 3
+      start_period: 5s
+      timeout: 60s
 
-# volumes:
-#   webapp_db_data:
+  client:
+    container_name: webapp_client
+    image: alpine
+    depends_on:
+      web:
+        condition: service_healthy
+    command:
+      - /bin/sh
+      - -c
+      - |
+        # tail -f /dev/null
+        apk add --no-cache -q curl
+        while true; do
+          curl -sX POST http://web:5000/insert \
+              -H "Content-Type: application/json" \
+              -d '{"ts": "'$$(date -u +"%Y-%m-%dT%H:%M:%S.%3N")'", "value": 42.5}';
+          sleep 5;
+        done
+
+volumes:
+  webapp_db_data:

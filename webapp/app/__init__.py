@@ -35,6 +35,7 @@ def create_app():
     logger.debug("Loading {}...".format(models.__name__))
     with app.app_context():
         db.create_all()
+        # TODO - gunicorn race condition
 
     # add routes
     from .routes import setup_routes
