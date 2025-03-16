@@ -66,10 +66,10 @@ Here are the guidelines for the application:
         ```
     - [x] add docker-compose.yaml that includes postgres for local testing
     - webapp fix
-        - re-organize webapp project structure
+        - [x] re-organize webapp project structure
             - replace app.py with app module + run.py
-            - add sqlalchemy as ORM
-        - update `/` endpoint to query and show data
+            - add sqlalchemy as ORM, and models.py
+        - [x] update `/` endpoint to query and show data
         - remove the original insertion while-loop
             - add an `/insert` endpoint for data insertion
             - make a script to insert through this endpoint as a client and run this script as a cronjob
