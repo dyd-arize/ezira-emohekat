@@ -21,7 +21,8 @@ def setup_routes(app):
         except Exception as e:
             logger.error(e, exc_info=True)
             data = [{"date:": "error", "value": "error"}]
-        logger.debug(data)
+        logger.debug(f"Size of data: {len(data)}")
+        # logger.debug(data)
         return render_template("table.html", title="Actuals", data=data)
 
     @app.route("/insert", methods=["POST"])

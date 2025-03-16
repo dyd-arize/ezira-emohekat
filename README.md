@@ -78,7 +78,7 @@ Here are the guidelines for the application:
         while true; do
             curl -X POST http://127.0.0.1:5000/insert \
                 -H "Content-Type: application/json" \
-                -d '{"ts": "'"$(date -u +"%Y-%m-%dT%H:%M:%S.%3N")"'", "value": 42.5}';
+                -d '{"ts": "'$$(date -u +"%Y-%m-%dT%H:%M:%S.%3N")'", "value": "'$$(awk 'BEGIN{srand(); print rand()}')'"}';
             sleep 5;
         done
         ```

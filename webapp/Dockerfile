@@ -45,6 +45,7 @@ COPY . .
 # Expose the Flask port
 EXPOSE 5000
 # Run with gunicorn
-# CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:create_app()", "--workers", "9"]
-CMD ["flask", "run", "--host", "0.0.0.0", "--debug"]
+# add --preload to prevent db.create_all() race condition
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:create_app()", "--preload", "--workers", "9"]
+# CMD ["flask", "run", "--host", "0.0.0.0", "--debug"]
 # CMD ["tail", "-f", "/dev/null"]
