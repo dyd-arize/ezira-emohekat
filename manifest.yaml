@@ -115,11 +115,10 @@ spec:
         image: gcr.io/on-prem-test-314219/interview-project/webapp:latest
         imagePullPolicy: Always
         ports:
-          - containerPort: 5000 
+          - containerPort: 5000
         env:
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
               key: postgres
               name: postgres-passwords
- 
