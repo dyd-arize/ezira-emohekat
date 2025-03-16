@@ -89,8 +89,10 @@ Here are the guidelines for the application:
     - minio upload event hook
     - queue
     - worker
+        - with monitoring
 - create AWS account
 - deployment
     - github actions, local test with act
         - terraform for infra provision/teardown
         - system deployment
+- make a diagram
