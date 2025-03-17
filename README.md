@@ -85,6 +85,7 @@ Here are the guidelines for the application:
         - to replicate what was implemented originally
     - [x] improve webapp dockerfile, add gunicorn
     - [ ] add unit and integration test with pytest
+    - [ ] pagination
 - event-driven ingestion
     - [x] webapp minio-upload-event webhook endpoint
     - minio
@@ -104,9 +105,17 @@ Here are the guidelines for the application:
         - [x] insert csv to postgres sql
         - [x] with flower monitoring
         - [ ] reprocess failed job
-- create AWS account
-- deployment
-    - github actions, local test with act
+- [x]create AWS account
+    - manually init AWS account
+        - setup root
+        - enable IAM Identity Center
+        - create an admin user, admin group, permission set, associate group/set/account
+        - configure local aws cli profile with sso
+- manual deployment
     - terraform for infra provision/teardown
+        - EKS
+            - [x] ECR
+                - [ ] cross platform image, only linux/amd64 for now
     - system deployment
+- automate deployement with github actions, local test with act
 - make a diagram

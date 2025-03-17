@@ -1,3 +1,8 @@
+## To local push
+# export AWS_PROFILE=
+# source source.auth-ecr.sh ${AWS_PROFILE}
+# docker compose push web
+
 services:
   db:
     image: postgres:latest
@@ -39,6 +44,7 @@ services:
       args:
         - PYVER=3.13
     container_name: webapp
+    image: ${DOCKER_REGISTRY:-PLEASE_SOURCE_AUTH_ECR}/arize/webapp:0.0.0
     restart: always
     env_file:
       - .env
