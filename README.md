@@ -105,17 +105,31 @@ Here are the guidelines for the application:
         - [x] insert csv to postgres sql
         - [x] with flower monitoring
         - [ ] reprocess failed job
-- [x]create AWS account
+- [ ] cross platform image, only linux/amd64 for now
+- [x] create AWS account
     - manually init AWS account
         - setup root
         - enable IAM Identity Center
         - create an admin user, admin group, permission set, associate group/set/account
         - configure local aws cli profile with sso
+    - choose to use `us-west-1`
 - manual deployment
-    - terraform for infra provision/teardown
-        - EKS
-            - [x] ECR
-                - [ ] cross platform image, only linux/amd64 for now
-    - system deployment
+    - [ ] terraform for infra provision/teardown
+        - [x] EKS, going to try [EKS Auto](https://docs.aws.amazon.com/eks/latest/best-practices/automode.html), since it's new
+            - [x] VPC
+                - CIDR: `10.0.1.0/24`, the last octet is enough(256 IPs) for this example
+                - 2 AZs: us-west-1a/b
+                    - For each AZ:
+                        - 1 public subnet for ingress
+                        - 2 private subnet for cluster and worker nodes
+                        - CIDR: `10.0.1.X/28, (16 - reserved) = 11 IPs` are enough
+                - IGW, RT
+            - [x] control plane, v1.31
+            - [ ] cluster, worker nodes
+            - [x] ECR, private registry
+            - [ ] cert-manager + letsencrypt issuer
+            - [ ] system deployment
+            - [ ] load balancer
+            - [ ] Route53
 - automate deployement with github actions, local test with act
 - make a diagram
