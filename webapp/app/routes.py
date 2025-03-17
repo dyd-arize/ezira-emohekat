@@ -39,7 +39,7 @@ def setup_routes(app):
         Test:
         curl -X POST http://127.0.0.1:5000/insert \
         -H "Content-Type: application/json" \
-        -d '{"ts": "'"$(date -u +"%Y-%m-%dT%H:%M:%S.%3N")"'", "value": 42.5}'
+        -d '{"ts": "'"$(date -u +"%Y-%m-%dT%H:%M:%S.%6N")"'", "value": 42.5}'
 
         Returns:
             JSON response indicating success or failure.

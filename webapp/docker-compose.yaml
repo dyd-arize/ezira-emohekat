@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:latest
-    container_name: webapp_db
+    container_name: webapp-db
     restart: always
     env_file:
       - .env
@@ -42,22 +42,23 @@ services:
       timeout: 60s
 
   client:
-    container_name: webapp_client
-    image: alpine
+    image: debian # Good to know alpine date omit milliseconds...
     depends_on:
       web:
         condition: service_healthy
+    deploy:
+      replicas: 10
     command:
-      - /bin/sh
+      - /bin/bash
       - -c
       - |
         # tail -f /dev/null
-        apk add --no-cache -q curl
+        apt-get -qq update > /dev/null && apt-get -qq install -y curl --no-install-recommends > /dev/null
         while true; do
           curl -sX POST http://web:5000/insert \
               -H "Content-Type: application/json" \
-              -d '{"ts": "'$$(date -u +"%Y-%m-%dT%H:%M:%S.%3N")'", "value": "'$$(awk 'BEGIN{srand(); print rand()}')'"}';
-          sleep 5;
+              -d '{"ts": "'$$(date -u +"%Y-%m-%dT%H:%M:%S.%6N")'", "value": "'$$(awk 'BEGIN{srand(); print rand()}')'"}';
+          sleep $$((RANDOM % 5 + 1));
         done
 
 volumes:
