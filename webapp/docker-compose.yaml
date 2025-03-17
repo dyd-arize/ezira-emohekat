@@ -60,25 +60,26 @@ services:
       retries: 3
       timeout: 60s
 
-  # client:
-  #   image: debian # Good to know alpine date omit milliseconds...
-  #   depends_on:
-  #     web:
-  #       condition: service_healthy
-  #   deploy:
-  #     replicas: 10
-  #   command:
-  #     - /bin/bash
-  #     - -c
-  #     - |
-  #       # tail -f /dev/null
-  #       apt-get -qq update > /dev/null && apt-get -qq install -y curl --no-install-recommends > /dev/null
-  #       while true; do
-  #         curl -sX POST http://web:5000/insert \
-  #             -H "Content-Type: application/json" \
-  #             -d '{"ts": "'$$(date -u +"%Y-%m-%dT%H:%M:%S.%6N")'", "value": "'$$(awk 'BEGIN{srand(); print rand()}')'"}';
-  #         sleep $$((RANDOM % 5 + 1));
-  #       done
+  client:
+    image: debian # Good to know alpine date omit milliseconds...
+    depends_on:
+      web:
+        condition: service_healthy
+    deploy:
+      replicas: 1
+      # replicas: 10
+    command:
+      - /bin/bash
+      - -c
+      - |
+        # tail -f /dev/null
+        apt-get -qq update > /dev/null && apt-get -qq install -y curl --no-install-recommends > /dev/null
+        while true; do
+          curl -sX POST http://web:5000/insert \
+              -H "Content-Type: application/json" \
+              -d '{"ts": "'$$(date -u +"%Y-%m-%dT%H:%M:%S.%6N")'", "value": "'$$(awk 'BEGIN{srand(); print rand()}')'"}';
+          sleep $$((RANDOM % 5 + 1));
+        done
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -123,6 +124,7 @@ services:
       - POSTGRES_HOST=db
       - RABBITMQ_HOST=rabbitmq
       - REDIS_HOST=redis
+      - MINIO_HOST=minio
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -131,6 +133,33 @@ services:
     command: celery -A make_celery worker --loglevel=info
     healthcheck:
       test: celery -A make_celery status
+      interval: 5s
+      retries: 3
+      timeout: 60s
+
+  flower:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - PYVER=3.13
+    container_name: flower
+    restart: always
+    env_file:
+      - .env
+    environment:
+      # Set to localhost in .env for local development without docker
+      - POSTGRES_HOST=db
+      - RABBITMQ_HOST=rabbitmq
+      - REDIS_HOST=redis
+    ports:
+      - "5555:5555"
+    depends_on:
+      celery:
+        condition: service_healthy
+    command: celery --app make_celery.celery_app flower
+    healthcheck:
+      test: curl --fail http://localhost:5555
       interval: 5s
       retries: 3
       timeout: 60s

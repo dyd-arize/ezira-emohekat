@@ -1,6 +1,34 @@
 from celery import shared_task
+from minio import Minio
+import os
+from io import BytesIO
+from . import logger
+from .utils import insert_actuals_from_stream
 
 
 @shared_task(ignore_result=False)
-def add(x, y):
+def async_add(x, y) -> int:
     return x + y
+
+
+@shared_task(ignore_result=False)
+def ingest_csv(bucket: str, key: str) -> dict[str, str]:
+    try:
+        # Get the object from MinIO
+        minio_client = Minio(
+            "{}:9000".format(os.getenv("MINIO_HOST")),
+            # TODO - not using the root user
+            access_key=f"{os.getenv('MINIO_ROOT_USER')}",
+            secret_key=f"{os.getenv('MINIO_ROOT_PASSWORD')}",
+            # TODO - should use HTTPS
+            secure=False,
+        )
+        obj = minio_client.get_object(bucket, key)
+        insert_actuals_from_stream(BytesIO(obj.read()))
+        logger.info(f"Successfully ingested {bucket}/{key}.")
+        return {"bucket": bucket, "key": key, "status": "success"}
+
+    except Exception as e:
+        logger.error(f"Failed to ingest {bucket}/{key}.")
+        logger.error(e, exc_info=True)
+        return {"bucket": bucket, "key": key, "status": "failed"}

@@ -15,7 +15,7 @@ load_dotenv()
 db = SQLAlchemy()
 
 
-def create_app():
+def create_app() -> Flask:
     app = Flask(__name__)
 
     # init db
