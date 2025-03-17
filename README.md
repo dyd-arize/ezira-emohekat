@@ -93,19 +93,20 @@ Here are the guidelines for the application:
             - bucket
             - config event hook
         - [ ] terraform automate
-            - [ ] create bucket
-            - [ ] config bucket event hook with rabbitmq
-            - [ ] create user
-            - [ ] create policy for user to access bucket
-            - [ ] create user access key/secret
+            - create bucket
+            - config bucket event hook with rabbitmq
+            - create user
+            - create policy for user to access bucket
+            - create user access key/secret
     - [x] rabbitmq
     - celery
-        - [x] integrate with flask, rabbitmq, redis(just for fun)
-        - [ ] insert csv to postgres sql
+        - [x] integrate with flask, rabbitmq, redis(just for fun, keep failed job status)
+        - [x] insert csv to postgres sql
         - [x] with flower monitoring
+        - [ ] reprocess failed job
 - create AWS account
 - deployment
     - github actions, local test with act
-        - terraform for infra provision/teardown
-        - system deployment
+    - terraform for infra provision/teardown
+    - system deployment
 - make a diagram
