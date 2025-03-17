@@ -97,7 +97,7 @@ Here are the guidelines for the application:
             - [ ] config bucket event hook with rabbitmq
             - [ ] create user
             - [ ] create policy for user to access bucket
-            - [ ] cr
+            - [ ] create user access key/secret
     - [x] rabbitmq
     - celery
         - [x] integrate with flask, rabbitmq, redis(just for fun)
