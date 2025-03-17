@@ -1,6 +1,8 @@
 from flask import render_template, request, jsonify
 from . import logger, db
 from .models import Actuals
+from .tasks import add
+from celery.result import AsyncResult
 
 
 def setup_routes(app):
@@ -52,7 +54,7 @@ def setup_routes(app):
         except Exception as e:
             logger.error(f"request.json: {request.json}")
             logger.error(e, exc_info=True)
-            return jsonify({"status": "error"}), 500
+            return jsonify({"status": "Incorrect request data"}), 400
 
         try:
             actual = Actuals(ts, value)
@@ -61,7 +63,7 @@ def setup_routes(app):
         except Exception as e:
             logger.error(f"trying to insert actual: {actual}")
             logger.error(e, exc_info=True)
-            return jsonify({"status": "error"}), 500
+            return jsonify({"status": "Error inserting an actual"}), 500
 
         return jsonify({"message": "Inserted!"}), 200
 
@@ -79,3 +81,26 @@ def setup_routes(app):
         """
 
         return jsonify({"message": "Healthy!"}), 200
+
+    @app.route("/minio/webhook", methods=["POST"])
+    def minio_webhook():
+        try:
+            event_data = request.json  # MinIO sends JSON payloads
+            if not event_data:
+                return jsonify({"error": "No data received"}), 400
+            logger.debug(f"Received MinIO event: {event_data}")
+            result = add.delay(1, 2)
+            logger.info(f"result_id: {result.id}")
+            return jsonify({"result_id": result.id}), 200
+        except Exception as e:
+            logger.error(e, exc_info=True)
+            return jsonify({"message": "Error handling minio webhook"}), 500
+
+    @app.route("/result/<id>", methods=["GET"])
+    def task_result(id: str) -> dict[str, object]:
+        result = AsyncResult(id)
+        return {
+            "ready": result.ready(),
+            "successful": result.successful(),
+            "value": result.result if result.ready() else None,
+        }

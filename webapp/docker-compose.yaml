@@ -11,10 +11,26 @@ services:
       test: pg_isready -U postgres
       interval: 5s
       retries: 3
-      start_period: 5s
       timeout: 60s
     volumes:
       - webapp_db_data:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    command: server /data --console-address ":9001"
+    env_file:
+      - .env
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: curl -f http://localhost:9000/minio/health/live
+      interval: 5s
+      retries: 3
+      timeout: 60s
 
   web:
     build:
@@ -29,37 +45,96 @@ services:
     environment:
       # Set to localhost in .env for local development without docker
       - POSTGRES_HOST=db
+      - RABBITMQ_HOST=rabbitmq
+      - REDIS_HOST=redis
     ports:
       - "5000:5000"
     depends_on:
       db:
         condition: service_healthy
+      minio:
+        condition: service_healthy
     healthcheck:
       test: curl --fail http://localhost:5000/healthcheck
       interval: 5s
       retries: 3
-      start_period: 5s
       timeout: 60s
 
-  client:
-    image: debian # Good to know alpine date omit milliseconds...
+  # client:
+  #   image: debian # Good to know alpine date omit milliseconds...
+  #   depends_on:
+  #     web:
+  #       condition: service_healthy
+  #   deploy:
+  #     replicas: 10
+  #   command:
+  #     - /bin/bash
+  #     - -c
+  #     - |
+  #       # tail -f /dev/null
+  #       apt-get -qq update > /dev/null && apt-get -qq install -y curl --no-install-recommends > /dev/null
+  #       while true; do
+  #         curl -sX POST http://web:5000/insert \
+  #             -H "Content-Type: application/json" \
+  #             -d '{"ts": "'$$(date -u +"%Y-%m-%dT%H:%M:%S.%6N")'", "value": "'$$(awk 'BEGIN{srand(); print rand()}')'"}';
+  #         sleep $$((RANDOM % 5 + 1));
+  #       done
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    env_file:
+      - .env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
     depends_on:
       web:
         condition: service_healthy
-    deploy:
-      replicas: 10
-    command:
-      - /bin/bash
-      - -c
-      - |
-        # tail -f /dev/null
-        apt-get -qq update > /dev/null && apt-get -qq install -y curl --no-install-recommends > /dev/null
-        while true; do
-          curl -sX POST http://web:5000/insert \
-              -H "Content-Type: application/json" \
-              -d '{"ts": "'$$(date -u +"%Y-%m-%dT%H:%M:%S.%6N")'", "value": "'$$(awk 'BEGIN{srand(); print rand()}')'"}';
-          sleep $$((RANDOM % 5 + 1));
-        done
+    healthcheck:
+      test: rabbitmq-diagnostics check_running
+      interval: 5s
+      retries: 3
+      timeout: 60s
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: redis-cli ping
+      interval: 5s
+      retries: 3
+      timeout: 60s
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - PYVER=3.13
+    container_name: celery
+    restart: always
+    env_file:
+      - .env
+    environment:
+      # Set to localhost in .env for local development without docker
+      - POSTGRES_HOST=db
+      - RABBITMQ_HOST=rabbitmq
+      - REDIS_HOST=redis
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: celery -A make_celery worker --loglevel=info
+    healthcheck:
+      test: celery -A make_celery status
+      interval: 5s
+      retries: 3
+      timeout: 60s
 
 volumes:
   webapp_db_data:
+  minio_data:

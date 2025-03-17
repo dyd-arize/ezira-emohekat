@@ -3,10 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 import os
 import logging
+from celery import Celery, Task
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
-    level=logging.DEBUG if os.getenv("DEBUG") == "True" else logging.INFO
+    level=logging.DEBUG if os.getenv("WEBAPP_DEBUG") == "True" else logging.INFO
 )
 
 load_dotenv()
@@ -42,4 +43,31 @@ def create_app():
 
     setup_routes(app)
 
+    # init celery
+    app.config.from_mapping(
+        CELERY=dict(
+            broker_url="amqp://{}:{}@{}:5672/".format(
+                os.getenv("RABBITMQ_DEFAULT_USER"),
+                os.getenv("RABBITMQ_DEFAULT_PASS"),
+                os.getenv("RABBITMQ_HOST"),
+            ),
+            result_backend="redis://{}:6379/0".format(os.getenv("REDIS_HOST")),
+            task_ignore_result=True,
+        ),
+    )
+    celery_init_app(app)
+
     return app
+
+
+def celery_init_app(app: Flask) -> Celery:
+    class FlaskTask(Task):
+        def __call__(self, *args: object, **kwargs: object) -> object:
+            with app.app_context():
+                return self.run(*args, **kwargs)
+
+    celery_app = Celery(app.name, task_cls=FlaskTask)
+    celery_app.config_from_object(app.config["CELERY"])
+    celery_app.set_default()
+    app.extensions["celery"] = celery_app
+    return celery_app
