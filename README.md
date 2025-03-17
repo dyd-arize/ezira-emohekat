@@ -86,10 +86,18 @@ Here are the guidelines for the application:
     - [x] improve webapp dockerfile, add gunicorn
     - [ ] add unit and integration test with pytest
 - event-driven ingestion
-    - minio upload event hook
-    - queue
-    - worker
-        - with monitoring
+    - [ ] webapp minio-upload-event webhook endpoint
+    - minio
+        - [ ] config webhook integration through env
+        - [x] manually create bucket, config event hook and persist for now
+        - [ ] terraform automate create bucket
+            - [ ] terraform automate config bucket event hook with rabbitmq
+    - [x] rabbitmq
+    - celery
+        - [ ] integrate with rabbitmq and able to receive upload event
+        - [ ] insert csv to postgres sql
+        - [ ] with flower monitoring
+- [ ] webapp, ingestion integration
 - create AWS account
 - deployment
     - github actions, local test with act
