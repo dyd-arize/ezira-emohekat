@@ -89,15 +89,20 @@ Here are the guidelines for the application:
     - [x] webapp minio-upload-event webhook endpoint
     - minio
         - [x] config webhook integration through env
-        - [x] manually create bucket, config event hook and persist for now
-        - [ ] terraform automate create bucket
-            - [ ] terraform automate config bucket event hook with rabbitmq
+        - [x] manually create
+            - bucket
+            - config event hook
+        - [ ] terraform automate
+            - [ ] create bucket
+            - [ ] config bucket event hook with rabbitmq
+            - [ ] create user
+            - [ ] create policy for user to access bucket
+            - [ ] cr
     - [x] rabbitmq
     - celery
         - [x] integrate with flask, rabbitmq, redis(just for fun)
         - [ ] insert csv to postgres sql
-        - [ ] with flower monitoring
-- [ ] webapp, ingestion integration
+        - [x] with flower monitoring
 - create AWS account
 - deployment
     - github actions, local test with act
