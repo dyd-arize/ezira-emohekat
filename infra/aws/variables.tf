@@ -19,11 +19,6 @@ variable "tag_contract" {
   type        = string
 }
 
-variable "tag_application" {
-  description = "Tag for application"
-  type        = string
-}
-
 variable "tag_environment" {
   description = "Tag for environment"
   type        = string

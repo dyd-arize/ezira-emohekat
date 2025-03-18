@@ -23,7 +23,6 @@ provider "aws" {
 locals {
   common_tags = {
     Contract    = var.tag_contract
-    Application = var.tag_application
     Environment = var.tag_environment
   }
 }

@@ -124,18 +124,19 @@ Here are the guidelines for the application:
             - 2 AZs: us-west-1a/b
                 - For each AZ:
                     - 1 public subnet for ingress
-                    - 2 private subnet for cluster and worker nodes
+                    - ~~2 private subnet for cluster and worker nodes~~
                     - CIDR: `10.0.1.X/27, (32 - reserved) = 27 IPs` are enough
             - IGW, RT
         - [x] ECR, private registry
             - [ ] need to define RBAC
-        - [ ] EKS, going to try [EKS Auto](https://docs.aws.amazon.com/eks/latest/best-practices/automode.html), since it's new
-            - [ ] control plane, v1.31
-            - [ ] cluster, worker nodes
+        - [x] EKS, going to try [EKS Auto](https://docs.aws.amazon.com/eks/latest/best-practices/automode.html), since it's new
+            - [ ] roll back to only public subnet for now
+            - [x] control plane, v1.31
+            - [ ] ~~cluster, worker nodes~~ going to use built-in node pools for now
     - manually kubectl
         - [ ] cert-manager + letsencrypt issuer
         - [ ] system deployment
         - [ ] load balancer
         - [ ] Route53
 - automate deployement with github actions, local test with act
-- make a diagram
+- make a diagram and documentation

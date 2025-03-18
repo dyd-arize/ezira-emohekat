@@ -27,5 +27,10 @@ module "ecr_registry" {
     ]
   })
 
-  tags = local.common_tags
+  tags = merge(
+    local.common_tags,
+    {
+      Application = "ECR"
+    }
+  )
 }
