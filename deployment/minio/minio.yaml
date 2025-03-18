@@ -29,7 +29,7 @@ spec:
         - name: MINIO_NOTIFY_WEBHOOK_ENABLE_webapp
           value: "on"
         - name: MINIO_NOTIFY_WEBHOOK_ENDPOINT_webapp
-          value: http://webapp.webapp.svc.cluster.local:5000/api/v1/minio/webhook
+          value: http://webapp.webapp.svc.cluster.local:5000/minio/webhook
         image: quay.io/minio/minio:latest
         imagePullPolicy: IfNotPresent
         name: minio

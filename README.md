@@ -105,6 +105,7 @@ Here are the guidelines for the application:
         - [x] insert csv to postgres sql
         - [x] with flower monitoring
         - [ ] reprocess failed job
+        - [ ] BUG, failure return incorrect status TODO
 - [x] cross-platform image linux/amd64 and linux/arm64
 - [x] create a new AWS account
     - manually init new AWS account
@@ -132,22 +133,46 @@ Here are the guidelines for the application:
         - [x] EKS, going to try [EKS Auto](https://docs.aws.amazon.com/eks/latest/best-practices/automode.html), since it's new
             - [x] control plane, v1.31
             - [ ] ~~cluster, worker nodes~~ going to use built-in node pools for now
+                - c6g.large system, c5a.large general-purpose
                 - [ ] roll back to only default public subnet for now, image pull error -> network issue TODO
     - pre init cluster
         - [x] comes with metric-server
         - [x] gp3 storage class
-        - [x] cert-manager + letsencrypt issuer
-        - [ ] aws lb controller -> IMDS issue TODO
-                - create IAM policy
-                - associate IAM OIDC
-                - IAM service account
-        - [ ] nginx ingress controller
-        - [ ] external secret operator + vault
+        - [x] coredns
+        - not required, just for fun
+            - [x] cert-manager + letsencrypt issuer
+            - [ ] aws lb controller -> IMDS issue TODO
+                    - create IAM policy
+                    - associate IAM OIDC
+                    - IAM service account
+            - [ ] nginx ingress controller
+                - ingress to work with route53
+            - [ ] external secret operator + vault
     - manually kubectl
         - [x] postgres
-        - [ ] webapp
-    - extra improvements
-        - [ ] load balancer
-        - [ ] ingress to work with route53
+        - [x] webapp
+            - after port forwarding webapp, this inserts a row, and it'll show on the page after refresh
+              ```
+              curl -sX POST http://localhost:5000/insert \
+              -H "Content-Type: application/json" \
+              -d '{"ts": "'$(date -u +"%Y-%m-%dT%H:%M:%S.%6N")'", "value": "'$(awk 'BEGIN{srand(); print rand()}')'"}'
+              ```
+        - [x] minio
+            - need manually create a bucket and add upload event webhook to the bucket
+        - [x] redis
+        - [x] rabbitmq
+        - [x] celery
+            - after port forwarding minio, and upload a sample csv
+            ```
+            [2025-03-18 22:30:05,369: INFO/MainProcess] Connected to amqp://rabbit:**@rabbitmq.webapp.svc.cluster.local:5672//
+            [2025-03-18 22:30:05,375: INFO/MainProcess] mingle: searching for neighbors
+            [2025-03-18 22:30:06,392: INFO/MainProcess] mingle: all alone
+            [2025-03-18 22:30:06,406: INFO/MainProcess] celery@celery-68d69b95c5-wppcm ready.
+            [2025-03-18 22:30:39,604: INFO/MainProcess] Task app.tasks.ingest_csv[920b29f5-04f8-448a-b57e-29120908fb0e] received
+            [2025-03-18 22:30:39,659: INFO/ForkPoolWorker-2] Successfully ingested test/sample.csv.
+            [2025-03-18 22:30:39,664: INFO/ForkPoolWorker-2] Task app.tasks.ingest_csv[920b29f5-04f8-448a-b57e-29120908fb0e] succeeded in 0.05905050200090045s: {'bucket': 'test', 'key': 'sample.csv', 'status': 'success'}
+            ```
+            - then refresh the webapp, new records were ingested
+        - [x] flower
 - automate deployement with github actions, local test with act
 - make a diagram and documentation

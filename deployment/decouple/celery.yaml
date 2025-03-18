@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery
+  template:
+    metadata:
+      labels:
+        app: celery
+    spec:
+      containers:
+        - name: celery
+          image: public.ecr.aws/a5i1k0h2/arize-dev/webapp:v0.0.0
+          command:
+            - /bin/bash
+            - -c
+            - |
+              celery -A make_celery worker --loglevel=info
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - secretRef:
+                name: celery-secrets
+          resources:
+            limits:
+              memory: "4Gi"
+              cpu: "2"
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+          readinessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - celery -A make_celery status
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 10
+          livenessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - celery -A make_celery status
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 3
+            failureThreshold: 3
