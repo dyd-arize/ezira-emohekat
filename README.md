@@ -112,10 +112,12 @@ Here are the guidelines for the application:
         - enable IAM Identity Center
         - create an admin user, admin group, permission set, associate group/set/account
         - configure local aws cli profile with sso
+        - [x] terraform state bucket, IAM user, policy, user's aws access credentials
+            - [ ] aws access credentials should be saved in secret manager
+        - [ ] automate above
     - choose to use `us-west-1`
 - manual deployment
     - [ ] terraform for infra provision/teardown
-        - [ ] terraform S3 backend
         - [x] EKS, going to try [EKS Auto](https://docs.aws.amazon.com/eks/latest/best-practices/automode.html), since it's new
             - [x] VPC
                 - CIDR: `10.0.1.0/24`, the last octet is enough(256 IPs) for this example
