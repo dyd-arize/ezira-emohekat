@@ -119,7 +119,7 @@ Here are the guidelines for the application:
     - choose to use `us-west-1`
 - manual deployment
     - manually terraform for infra provision/teardown
-        - [ ] VPC
+        - [x] VPC
             - CIDR: `10.0.1.0/24`, the last octet is enough(256 IPs) for this example
             - 2 AZs: us-west-1a/b
                 - For each AZ:
