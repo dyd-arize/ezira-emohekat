@@ -31,6 +31,8 @@ AWS_ACCOUNT = session.client("sts").get_caller_identity()["Account"]
 s3_client = session.client("s3")
 iam_client = session.client("iam")
 
+# TODO - automate init new account
+
 
 def create_s3_bucket():
     logger.info(f"Creating S3 bucket: {BUCKET_NAME}...")

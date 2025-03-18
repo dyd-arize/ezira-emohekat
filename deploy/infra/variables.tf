@@ -4,7 +4,6 @@ variable "aws_region" {
 }
 
 variable "aws_profile" {
-  description = "The AWS profile to use"
-  # created by pre_init_infra/run.py, but need to manually config aws profile
-  default = "terraformer"
+  description = "Created by pre_init_infra/run.py, but need to manually config aws profileThe AWS profile to use"
+  default     = "terraformer"
 }

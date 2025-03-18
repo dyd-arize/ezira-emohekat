@@ -106,17 +106,17 @@ Here are the guidelines for the application:
         - [x] with flower monitoring
         - [ ] reprocess failed job
 - [x] cross-platform image linux/amd64 and linux/arm64
-- [x] create AWS account
-    - manually init AWS account
-        - setup root
+- [x] create a new AWS account
+    - manually init new AWS account
+        - setup root MFA
         - enable IAM Identity Center
         - create an admin user, admin group, permission set, associate group/set/account
         - configure local aws cli profile with sso
-        - [x] terraform state bucket, IAM user, policy, user's aws access credentials
-            - [ ] aws access credentials should be saved in secret manager
+        - [x] terraform state bucket, IAM user `terraformer`, policy, user's aws access credentials
+            - [ ] `terraformer`'s creds are printing to console and need manual aws profile config
         - [ ] automate above
     - choose to use `us-west-1`
-- manual deployment
+- manual terraform deployment
     - [ ] terraform for infra provision/teardown
         - [x] EKS, going to try [EKS Auto](https://docs.aws.amazon.com/eks/latest/best-practices/automode.html), since it's new
             - [x] VPC
