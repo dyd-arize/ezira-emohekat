@@ -1,5 +1,15 @@
 #!/bin/bash
-[ -z ${AWS_PROFILE} ] && echo "AWS_PROFILE is required" && exit 1
+
+# handle source vs bash, prevent killing the shell
+if [ -z ${AWS_PROFILE} ]; then
+    echo "AWS_PROFILE is required"
+    if [ $0 != "$BASH_SOURCE" ]; then
+        return 1
+    else
+        exit 1
+    fi
+fi
+
 AWS_ACCOUNT=$(aws sts get-caller-identity | jq -r ".Account")
 AWS_REGION=$(aws configure get region)
 
