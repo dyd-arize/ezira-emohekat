@@ -134,6 +134,7 @@ Here are the guidelines for the application:
             - [x] control plane, v1.31
             - [ ] ~~cluster, worker nodes~~ going to use built-in node pools for now
     - manually kubectl
+        - [ ] gp3 storage class
         - [ ] cert-manager + letsencrypt issuer
         - [ ] system deployment
         - [ ] load balancer
