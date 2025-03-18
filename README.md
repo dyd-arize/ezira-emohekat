@@ -111,7 +111,7 @@ Here are the guidelines for the application:
         - setup root MFA
         - enable IAM Identity Center
         - create an admin user, admin group, permission set, associate group/set/account
-        - configure local aws cli profile with sso
+        - configure local aws cli profile with sso(don't forget `cli-pager=`)
         - [x] terraform state bucket, IAM user `terraformer`, policy, user's aws access credentials
             - [ ] `terraformer`'s creds are printing to console and need manual aws profile config
             - [ ] IAM policies are not fully created yet, use admin for now
@@ -130,16 +130,22 @@ Here are the guidelines for the application:
         - [x] ECR, private registry
             - [ ] need to define RBAC
         - [x] EKS, going to try [EKS Auto](https://docs.aws.amazon.com/eks/latest/best-practices/automode.html), since it's new
-            - [ ] roll back to only default public subnet for now, image pull error -> network issue
             - [x] control plane, v1.31
-            - [x] comes with metric-server
             - [ ] ~~cluster, worker nodes~~ going to use built-in node pools for now
+                - [ ] roll back to only default public subnet for now, image pull error -> network issue TODO
     - pre init cluster
+        - [x] comes with metric-server
         - [x] gp3 storage class
         - [x] cert-manager + letsencrypt issuer
+        - [ ] aws lb controller -> IMDS issue TODO
+                - create IAM policy
+                - associate IAM OIDC
+                - IAM service account
+        - [ ] nginx ingress controller
     - manually kubectl
-        - [ ] system deployment
+        - [ ] webapp deployment
+    - extra improvements
         - [ ] load balancer
-        - [ ] Route53
+        - [ ] ingress to work with route53
 - automate deployement with github actions, local test with act
 - make a diagram and documentation

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: aws-cli-test
+spec:
+  containers:
+    - name: aws-cli
+      image: amazon/aws-cli:latest
+      command:
+        - sleep
+        - infinity
