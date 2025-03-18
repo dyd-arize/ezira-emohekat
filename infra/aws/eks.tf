@@ -17,6 +17,17 @@ module "eks" {
   vpc_id     = module.vpc.vpc_id
   subnet_ids = [for subnet_id in module.vpc.public_subnets : subnet_id]
 
+  cluster_security_group_additional_rules = {
+    egress_all = {
+      description = "Allow all outbound traffic"
+      protocol    = "-1"
+      from_port   = 0
+      to_port     = 0
+      type        = "egress"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+
   tags = merge(
     local.common_tags,
     {
