@@ -86,6 +86,7 @@ Here are the guidelines for the application:
     - [x] improve webapp dockerfile, add gunicorn
     - [ ] add unit and integration test with pytest
     - [ ] pagination
+    - [ ] nice to be reactive refresh
 - event-driven ingestion
     - [x] webapp minio-upload-event webhook endpoint
     - minio
@@ -105,8 +106,9 @@ Here are the guidelines for the application:
         - [x] insert csv to postgres sql
         - [x] with flower monitoring
         - [ ] reprocess failed job
-        - [ ] BUG, failure return incorrect status TODO
+        - [x] BUG, failure return incorrect status - fixed
 - [x] cross-platform image linux/amd64 and linux/arm64
+- [ ] CI push image with Github Actions
 - [x] create a new AWS account
     - manually init new AWS account
         - setup root MFA
@@ -174,5 +176,5 @@ Here are the guidelines for the application:
             ```
             - then refresh the webapp, new records were ingested
         - [x] flower
-- automate deployement with github actions, local test with act
+- CD with github actions, local test with act
 - make a diagram and documentation

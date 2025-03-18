@@ -1,4 +1,4 @@
-from celery import shared_task
+from celery import shared_task, states
 from minio import Minio
 import os
 from io import BytesIO
@@ -6,13 +6,13 @@ from . import logger
 from .utils import insert_actuals_from_stream
 
 
-@shared_task(ignore_result=False)
+@shared_task()
 def async_add(x, y) -> int:
     return x + y
 
 
-@shared_task(ignore_result=False)
-def ingest_csv(bucket: str, key: str) -> dict[str, str]:
+@shared_task(bind=True)
+def ingest_csv(self, bucket: str, key: str) -> dict[str, str]:
     try:
         # Get the object from MinIO
         minio_client = Minio(
@@ -29,6 +29,7 @@ def ingest_csv(bucket: str, key: str) -> dict[str, str]:
         return {"bucket": bucket, "key": key, "status": "success"}
 
     except Exception as e:
+        self.update_state(state=states.FAILURE)
         logger.error(f"Failed to ingest {bucket}/{key}.")
         logger.error(e, exc_info=True)
-        return {"bucket": bucket, "key": key, "status": "failed"}
+        raise e

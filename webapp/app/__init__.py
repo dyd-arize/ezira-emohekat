@@ -52,7 +52,6 @@ def create_app() -> Flask:
                 os.getenv("RABBITMQ_HOST"),
             ),
             result_backend="redis://{}:6379/0".format(os.getenv("REDIS_HOST")),
-            task_ignore_result=True,
         ),
     )
     celery_init_app(app)
