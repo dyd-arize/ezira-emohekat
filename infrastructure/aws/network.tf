@@ -1,5 +1,8 @@
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
+  providers = {
+    aws = aws.default
+  }
 
   name = "arize-${var.tag_environment}"
   cidr = "10.0.1.0/24"

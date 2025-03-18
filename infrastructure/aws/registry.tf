@@ -1,13 +1,19 @@
-module "ecr_registry" {
+module "ecr_public" {
   source = "terraform-aws-modules/ecr/aws"
+  providers = {
+    aws = aws.east
+  }
 
   repository_name = "arize-${var.tag_environment}/webapp"
-
-  ## TODO
-  # repository_read_write_access_arns = ["arn:aws:iam::012345678901:role/terraform"]
+  repository_type = "public"
 
   # mutable just for dev environment
   repository_image_tag_mutability = var.tag_environment == "dev" ? "MUTABLE" : "IMMUTABLE"
+
+  public_repository_catalog_data = {
+    operating_systems = ["Linux"]
+    architectures     = ["x86-64", "ARM 64"]
+  }
 
   repository_lifecycle_policy = jsonencode({
     rules = [

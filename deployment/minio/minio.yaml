@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  serviceName: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+      - env:
+        # k -n webapp create secret generic minio-secrets --from-env-file=minio.env
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              key: MINIO_ROOT_USER
+              name: minio-secrets
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: MINIO_ROOT_PASSWORD
+              name: minio-secrets
+        - name: MINIO_NOTIFY_WEBHOOK_ENABLE_webapp
+          value: "on"
+        # - name: MINIO_NOTIFY_WEBHOOK_ENDPOINT_webapp
+        #   value: http://webapp:8000/api/v1/minio/webhook
+        image: quay.io/minio/minio:latest
+        imagePullPolicy: IfNotPresent
+        name: minio
+        command:
+        - /bin/bash
+        - -c
+        args:
+        - minio server /data --console-address :9001
+        ports:
+        - containerPort: 9000
+        - containerPort: 9001
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - curl -f http://localhost:9000/minio/health/live
+          failureThreshold: 3
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        volumeMounts:
+        - name: minio
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: minio
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: gp3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: minio
+  name: minio
+spec:
+  ports:
+  - name: api
+    port: 9000
+    targetPort: 9000
+  - name: console
+    port: 9001
+    targetPort: 9001
+  selector:
+    app: minio
+  type: ClusterIP
+---

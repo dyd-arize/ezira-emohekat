@@ -127,8 +127,7 @@ Here are the guidelines for the application:
                     - ~~2 private subnet for cluster and worker nodes~~
                     - CIDR: `10.0.1.X/27, (32 - reserved) = 27 IPs` are enough
             - IGW, RT
-        - [x] ECR, private registry
-            - [ ] need to define RBAC
+        - [x] ECR, public registry
         - [x] EKS, going to try [EKS Auto](https://docs.aws.amazon.com/eks/latest/best-practices/automode.html), since it's new
             - [x] control plane, v1.31
             - [ ] ~~cluster, worker nodes~~ going to use built-in node pools for now
@@ -142,8 +141,10 @@ Here are the guidelines for the application:
                 - associate IAM OIDC
                 - IAM service account
         - [ ] nginx ingress controller
+        - [ ] external secret operator + vault
     - manually kubectl
-        - [ ] webapp deployment
+        - [x] postgres
+        - [ ] webapp
     - extra improvements
         - [ ] load balancer
         - [ ] ingress to work with route53

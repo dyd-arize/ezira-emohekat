@@ -11,7 +11,4 @@ if [ -z ${AWS_PROFILE} ]; then
 fi
 
 AWS_ACCOUNT=$(aws sts get-caller-identity | jq -r ".Account")
-AWS_REGION=$(aws configure get region)
-
-export DOCKER_REGISTRY=${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com
-aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${DOCKER_REGISTRY}
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
