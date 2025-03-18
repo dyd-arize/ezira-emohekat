@@ -130,12 +130,14 @@ Here are the guidelines for the application:
         - [x] ECR, private registry
             - [ ] need to define RBAC
         - [x] EKS, going to try [EKS Auto](https://docs.aws.amazon.com/eks/latest/best-practices/automode.html), since it's new
-            - [ ] roll back to only public subnet for now
+            - [ ] roll back to only default public subnet for now, image pull error -> network issue
             - [x] control plane, v1.31
+            - [x] comes with metric-server
             - [ ] ~~cluster, worker nodes~~ going to use built-in node pools for now
+    - pre init cluster
+        - [x] gp3 storage class
+        - [x] cert-manager + letsencrypt issuer
     - manually kubectl
-        - [ ] gp3 storage class
-        - [ ] cert-manager + letsencrypt issuer
         - [ ] system deployment
         - [ ] load balancer
         - [ ] Route53

@@ -1,3 +1,4 @@
+# https://docs.aws.amazon.com/eks/latest/userguide/sample-storage-workload.html#_step_2_create_the_storage_class
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
