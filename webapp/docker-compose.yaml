@@ -43,6 +43,9 @@ services:
       dockerfile: Dockerfile
       args:
         - PYVER=3.13
+      platforms:
+        - linux/amd64
+        - linux/arm64
     container_name: webapp
     image: ${DOCKER_REGISTRY:-PLEASE_SOURCE_AUTH_ECR}/arize/webapp:0.0.0
     restart: always
@@ -116,11 +119,7 @@ services:
       timeout: 60s
 
   celery:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - PYVER=3.13
+    image: ${DOCKER_REGISTRY:-PLEASE_SOURCE_AUTH_ECR}/arize/webapp:0.0.0
     container_name: celery
     restart: always
     env_file:
@@ -144,11 +143,7 @@ services:
       timeout: 60s
 
   flower:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - PYVER=3.13
+    image: ${DOCKER_REGISTRY:-PLEASE_SOURCE_AUTH_ECR}/arize/webapp:0.0.0
     container_name: flower
     restart: always
     env_file:

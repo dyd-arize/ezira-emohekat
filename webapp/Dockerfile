@@ -1,4 +1,4 @@
-ARG PYVER
+ARG PYVER=3.13
 FROM python:${PYVER}-slim AS builder
 
 WORKDIR /app

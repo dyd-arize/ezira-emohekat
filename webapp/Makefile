@@ -17,4 +17,6 @@ prune-all:
 	docker system prune --volumes
 
 push:
-	bash ./scripts/push_ecr.sh
+	bash ./scripts/source.auth_ecr.sh
+	# or source ./scripts/source.auth_ecr.sh for later interactive use
+	docker compose push web
