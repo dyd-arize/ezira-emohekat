@@ -21,11 +21,11 @@ spec:
           value: postgres
         - name: PGUSER
           value: postgres
-        # k -n webapp create secret generic postgres-secrets --from-env-file=postgres.env
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
               key: POSTGRES_PASSWORD
+              # k -n webapp create secret generic postgres-secrets --from-env-file=postgres.env
               name: postgres-secrets
         - name: POD_IP
           valueFrom:
@@ -46,6 +46,17 @@ spec:
           failureThreshold: 3
           initialDelaySeconds: 5
           periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - -c
+            - exec pg_isready --host $POD_IP
+          failureThreshold: 3
+          initialDelaySeconds: 5
+          periodSeconds: 30
           successThreshold: 1
           timeoutSeconds: 3
         volumeMounts:
@@ -72,7 +83,7 @@ metadata:
 spec:
   ports:
   - name: postgres
-    port: 5434
+    port: 5432
     protocol: TCP
     targetPort: 5432
   selector:

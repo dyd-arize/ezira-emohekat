@@ -128,6 +128,7 @@ Here are the guidelines for the application:
                     - CIDR: `10.0.1.X/27, (32 - reserved) = 27 IPs` are enough
             - IGW, RT
         - [x] ECR, public registry
+            - [ ] add RBAC for ci/cd
         - [x] EKS, going to try [EKS Auto](https://docs.aws.amazon.com/eks/latest/best-practices/automode.html), since it's new
             - [x] control plane, v1.31
             - [ ] ~~cluster, worker nodes~~ going to use built-in node pools for now

@@ -28,8 +28,8 @@ spec:
               name: minio-secrets
         - name: MINIO_NOTIFY_WEBHOOK_ENABLE_webapp
           value: "on"
-        # - name: MINIO_NOTIFY_WEBHOOK_ENDPOINT_webapp
-        #   value: http://webapp:8000/api/v1/minio/webhook
+        - name: MINIO_NOTIFY_WEBHOOK_ENDPOINT_webapp
+          value: http://webapp.webapp.svc.cluster.local:5000/api/v1/minio/webhook
         image: quay.io/minio/minio:latest
         imagePullPolicy: IfNotPresent
         name: minio
@@ -42,13 +42,20 @@ spec:
         - containerPort: 9000
         - containerPort: 9001
         readinessProbe:
-          exec:
-            command:
-            - sh
-            - -c
-            - curl -f http://localhost:9000/minio/health/live
+          httpGet:
+            path: /minio/health/live
+            port: 9000
           failureThreshold: 3
           initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        livenessProbe:
+          httpGet:
+            path: /minio/health/live
+            port: 9000
+          failureThreshold: 3
+          initialDelaySeconds:
           periodSeconds: 5
           successThreshold: 1
           timeoutSeconds: 3
