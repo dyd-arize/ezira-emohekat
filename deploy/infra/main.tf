@@ -9,9 +9,8 @@ terraform {
   }
 
   backend "s3" {
-    bucket       = "arize-terraform-state"
+    bucket       = "drewyangdev-arize-state"
     key          = "terraform/state.tfstate"
-    region       = var.aws_region
     use_lockfile = true
   }
 }
@@ -19,4 +18,12 @@ terraform {
 provider "aws" {
   region  = var.aws_region
   profile = var.aws_profile
+}
+
+locals {
+  common_tags = {
+    Contract    = var.tag_contract
+    Application = var.tag_application
+    Environment = var.tag_environment
+  }
 }

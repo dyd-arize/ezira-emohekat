@@ -93,7 +93,7 @@ Here are the guidelines for the application:
         - [x] manually create
             - bucket
             - config event hook
-        - [ ] terraform automate
+        - [ ] terraform automate minio event hook config
             - create bucket
             - config bucket event hook with rabbitmq
             - create user
@@ -114,25 +114,28 @@ Here are the guidelines for the application:
         - configure local aws cli profile with sso
         - [x] terraform state bucket, IAM user `terraformer`, policy, user's aws access credentials
             - [ ] `terraformer`'s creds are printing to console and need manual aws profile config
+            - [ ] IAM policies are not fully created yet, use admin for now
         - [ ] automate above
     - choose to use `us-west-1`
-- manual terraform deployment
-    - [ ] terraform for infra provision/teardown
-        - [x] EKS, going to try [EKS Auto](https://docs.aws.amazon.com/eks/latest/best-practices/automode.html), since it's new
-            - [x] VPC
-                - CIDR: `10.0.1.0/24`, the last octet is enough(256 IPs) for this example
-                - 2 AZs: us-west-1a/b
-                    - For each AZ:
-                        - 1 public subnet for ingress
-                        - 2 private subnet for cluster and worker nodes
-                        - CIDR: `10.0.1.X/27, (32 - reserved) = 27 IPs` are enough
-                - IGW, RT
-            - [x] control plane, v1.31
+- manual deployment
+    - manually terraform for infra provision/teardown
+        - [ ] VPC
+            - CIDR: `10.0.1.0/24`, the last octet is enough(256 IPs) for this example
+            - 2 AZs: us-west-1a/b
+                - For each AZ:
+                    - 1 public subnet for ingress
+                    - 2 private subnet for cluster and worker nodes
+                    - CIDR: `10.0.1.X/27, (32 - reserved) = 27 IPs` are enough
+            - IGW, RT
+        - [x] ECR, private registry
+            - [ ] need to define RBAC
+        - [ ] EKS, going to try [EKS Auto](https://docs.aws.amazon.com/eks/latest/best-practices/automode.html), since it's new
+            - [ ] control plane, v1.31
             - [ ] cluster, worker nodes
-            - [x] ECR, private registry
-            - [ ] cert-manager + letsencrypt issuer
-            - [ ] system deployment
-            - [ ] load balancer
-            - [ ] Route53
+    - manually kubectl
+        - [ ] cert-manager + letsencrypt issuer
+        - [ ] system deployment
+        - [ ] load balancer
+        - [ ] Route53
 - automate deployement with github actions, local test with act
 - make a diagram

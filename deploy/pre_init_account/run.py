@@ -63,26 +63,34 @@ def create_iam_user():
         logger.info("User already exists, continuing...")
 
 
-def create_and_attach_policy():
-    policy_document = {
+def create_and_attach_policies():
+    tf_policy_document = {
         "Version": "2012-10-17",
         "Statement": [
             {
                 "Effect": "Allow",
-                "Action": [
-                    "s3:ListBucket",
-                    "s3:GetObject",
-                    "s3:PutObject",
-                    "s3:DeleteObject",
-                ],
+                "Action": "s3:ListBucket",
+                "Resource": f"arn:aws:s3:::{BUCKET_NAME}",
+            },
+            {
+                "Effect": "Allow",
+                "Action": ["s3:GetObject", "s3:PutObject"],
+                "Resource": [f"arn:aws:s3:::{BUCKET_NAME}/terraform/state.tfstate"],
+            },
+            {
+                "Effect": "Allow",
+                "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
                 "Resource": [
-                    f"arn:aws:s3:::{BUCKET_NAME}",
-                    f"arn:aws:s3:::{BUCKET_NAME}/*",
+                    f"arn:aws:s3:::{BUCKET_NAME}/terraform/state.tfstate.tflock"
                 ],
-            }
+            },
         ],
     }
+    create_and_attach_policy(tf_policy_document)
+    # TODO - other policies to create resources
 
+
+def create_and_attach_policy(policy_document):
     logger.info("Creating IAM policy...")
     try:
         policy_response = iam_client.create_policy(

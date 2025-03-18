@@ -47,7 +47,7 @@ services:
         - linux/amd64
         - linux/arm64
     container_name: webapp
-    image: ${DOCKER_REGISTRY:-PLEASE_SOURCE_AUTH_ECR}/arize/webapp:0.0.0
+    image: ${DOCKER_REGISTRY:-PLEASE_SOURCE_AUTH_ECR}/arize-dev/webapp:v0.0.0
     restart: always
     env_file:
       - .env
@@ -119,7 +119,7 @@ services:
       timeout: 60s
 
   celery:
-    image: ${DOCKER_REGISTRY:-PLEASE_SOURCE_AUTH_ECR}/arize/webapp:0.0.0
+    image: ${DOCKER_REGISTRY:-PLEASE_SOURCE_AUTH_ECR}/arize-dev/webapp:v0.0.0
     container_name: celery
     restart: always
     env_file:
@@ -143,7 +143,7 @@ services:
       timeout: 60s
 
   flower:
-    image: ${DOCKER_REGISTRY:-PLEASE_SOURCE_AUTH_ECR}/arize/webapp:0.0.0
+    image: ${DOCKER_REGISTRY:-PLEASE_SOURCE_AUTH_ECR}/arize-dev/webapp:v0.0.0
     container_name: flower
     restart: always
     env_file:
