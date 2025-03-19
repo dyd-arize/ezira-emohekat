@@ -280,22 +280,24 @@
 - Services:
     - postgres: `psql -h localhost -p 5434 -U postgres -d webapp`
     - web: https://localhost:5000
+    - client: curl webapp's `/insert` endpoint
+        - you can scale up the `services.client.deploy.replicas`, currently set to 1
     - minio: https://localhost:9001
     - rabbitmq
     - redis
     - celery
     - cflower(flower): https://localhost:5555
 - Test:
-    - For web, you can validate web's insert endpoint by curl, then refresh the page on https://localhost:5000:
+    - For web, you can scale up `services.client` to curl, or you can curl the web's `/insert` endpoint by yourself, then refresh the page on https://localhost:5000:
     ```
     # once
-    curl -sX POST http://web:5000/insert \
+    curl -sX POST http://localhost:5000/insert \
             -H "Content-Type: application/json" \
             -d '{"ts": "'$(date -u +"%Y-%m-%dT%H:%M:%S.%6N")'", "value": "'$(awk 'BEGIN{srand(); print rand()}')'"}';
 
-    # continuously randomly 1-5 seconds
+    # continuously randomly 1-5 seconds - what services.client does
     while true; do
-        curl -sX POST http://web:5000/insert \
+        curl -sX POST http://localhost:5000/insert \
             -H "Content-Type: application/json" \
             -d '{"ts": "'$(date -u +"%Y-%m-%dT%H:%M:%S.%6N")'", "value": "'$(awk 'BEGIN{srand(); print rand()}')'"}';
         sleep $$((RANDOM % 5 + 1));
@@ -348,8 +350,8 @@
         - Then run `bash run.sh`
         - This will install required k8s addons/resources and `webapp` namespace
     - Since secret manager isn't in place, k8s secrets need to be created from .env files. Similar to [Run on Docker](#run-on-docker), you need to make .env file for each deployment either following the manifest .yaml or example.env
-    - Then run `bash deploy_all.sh`
-    - Then these pods should be running
+    - Run `bash deploy_all.sh`
+    - These pods should be running
     ```
     k -n webapp get pods
     NAME                       READY   STATUS    RESTARTS        AGE
@@ -361,6 +363,7 @@
     redis-0                    1/1     Running   0               3m38s
     webapp-6cf45f9869-nb5gq    1/1     Running   2 (5m28s ago)   5m45s
     ```
+    - Run `bash port-forward_all.sh`
 
 [Top](#table-of-contents)
 
