@@ -6,6 +6,7 @@
 - [What's in here](#whats-in-here)
 - [Run on Docker](#run-on-docker)
 - [Run on AWS](#run-on-aws)
+- [Don't Forget to Teardown](#dont-forget-to-teardown)
 
 ## Action Items
 > It would be better if I have maken a Github project...
@@ -270,25 +271,25 @@
 > Poetry (version 2.1.1)
 > Python 3.13.2
 
-## Run with Docker
+## Run on Docker
 
 - Go to `$PROJECT_DIR/webapp/`
-- Make individual .env files following by the example.env
+- **Make individual .env files following by the example.env**
 - `make run` is going to `docker compose up --build`
     - In [docker-compose.yaml](./webapp/docker-compose.yaml), `services.web.build.platforms` was set to build for both `linux/amd64` and `linux/arm64`, the build process should be done in 10 mins.
         - If you don't have docker configured for multi-platform build [doc here](https://docs.docker.com/build/building/multi-platform/), you most likely will run into `Error: multiple platforms feature is currently not supported for docker driver`, just comment the entire `platforms` section.
 - Services:
     - postgres: `psql -h localhost -p 5434 -U postgres -d webapp`
-    - web: https://localhost:5000
+    - web: https://localhost:5000/
     - client: curl webapp's `/insert` endpoint
         - you can scale up the `services.client.deploy.replicas`, currently set to 1
-    - minio: https://localhost:9001
+    - minio: https://localhost:9001/
     - rabbitmq
     - redis
     - celery
-    - cflower(flower): https://localhost:5555
+    - cflower(flower): https://localhost:5555/
 - Test:
-    - For web, you can scale up `services.client` to curl, or you can curl the web's `/insert` endpoint by yourself, then refresh the page on https://localhost:5000:
+    - For web, you can scale up `services.client` to curl, or you can curl the web's `/insert` endpoint by yourself, then refresh the page on https://localhost:5000/
     ```
     # once
     curl -sX POST http://localhost:5000/insert \
@@ -303,9 +304,9 @@
         sleep $$((RANDOM % 5 + 1));
     done
     ```
-    - For minio webhook, you do need to manually configure it for now at http://localhost:9001 `Login -> Create a bucket -> Configure bucket PUT event sent to the webapp webhook`, then upload [sample.csv](./webapp/data/sample.csv) to the bucket.
-        - You can go to http://localhost:5555 to check ingestion task status
-        - Or you can refresh the page on https://localhost:5000, you should see records been inserted
+    - For minio webhook, you do need to manually configure it for now at http://localhost:9001/ `Login -> Create a bucket -> Configure bucket PUT event sent to the webapp webhook`, then upload [sample.csv](./webapp/data/sample.csv) to the bucket.
+        - You can go to http://localhost:5555/ to check ingestion task status
+        - Or you can refresh the page on https://localhost:5000/, you should see records been inserted
 
 [Top](#table-of-contents)
 
@@ -330,7 +331,7 @@
 - Provision AWS resources
     - Go to `$PROJECT_DIR/infrastructure/aws/`
     - Make sure you have `terraform` installed, [doc](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
-    - Make a `dev.tfvars` file under `$PROJECT_DIR/infrastructure/aws/stage/` following `example.tfvars`
+    - **Make a `dev.tfvars` file under `$PROJECT_DIR/infrastructure/aws/stage/` following `example.tfvars`**
     ```
     export AWS_PROFILE=<since 'terraformer' isn't ready, use admin profile for now>
     export AWS_REGION=us-west-1
@@ -346,10 +347,10 @@
     aws eks update-kubeconfig --region us-west-1 --name <cluster name>
     ```
     - Go to `$PROJECT_DIR/deployment/pre_init_cluster`
-        - Make a .env file with `CLUSTER_NAME=<EKS cluster name>`
+        - **Make a .env file with `CLUSTER_NAME=<EKS cluster name>`**
         - Then run `bash run.sh`
         - This will install required k8s addons/resources and `webapp` namespace
-    - Since secret manager isn't in place, k8s secrets need to be created from .env files. Similar to [Run on Docker](#run-on-docker), you need to make .env file for each deployment either following the manifest .yaml or example.env
+    - Since secret manager isn't in place, k8s secrets need to be created from .env files. Similar to [Run on Docker](#run-on-docker), **you need to make .env file for each deployment either following the manifest .yaml or example.env**
     - Run `bash deploy_all.sh`
     - These pods should be running
     ```
@@ -363,7 +364,7 @@
     redis-0                    1/1     Running   0               3m38s
     webapp-6cf45f9869-nb5gq    1/1     Running   2 (5m28s ago)   5m45s
     ```
-    - Run `bash port-forward_all.sh`
+    - Run `bash port-forward_all.sh`, then you can interact just like [Run on Docker](#run-on-docker) like http://localhost:5000/
 
 [Top](#table-of-contents)
 
