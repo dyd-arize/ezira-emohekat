@@ -9,7 +9,9 @@ services:
     container_name: webapp-db
     restart: always
     env_file:
-      - postgres.env
+      - path: postgres.env
+        # for ci build
+        required: false
     ports:
       - "5432:5432"
     healthcheck:
@@ -33,7 +35,9 @@ services:
     image: &webimage public.ecr.aws/a5i1k0h2/arize-dev/webapp:v0.0.0
     restart: always
     env_file:
-      - webapp.env
+      - path: webapp.env
+        # for ci build
+        required: false
     environment:
       # Override local development .env
       - POSTGRES_HOST=db
@@ -55,7 +59,9 @@ services:
     container_name: minio
     command: server /data --console-address ":9001"
     env_file:
-      - minio.env
+      - path: minio.env
+        # for ci build
+        required: false
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -95,7 +101,9 @@ services:
     image: rabbitmq:3-management
     container_name: rabbitmq
     env_file:
-      - rabbitmq.env
+      - path: rabbitmq.env
+        # for ci build
+        required: false
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -124,7 +132,9 @@ services:
     container_name: celery
     restart: always
     env_file:
-      - celery.env
+      - path: celery.env
+        # for ci build
+        required: false
     environment:
       # Override local development .env
       - POSTGRES_HOST=db
@@ -148,7 +158,9 @@ services:
     container_name: cflower
     restart: always
     env_file:
-      - celery.env
+      - path: celery.env
+        # for ci build
+        required: false
     environment:
       # Override local development .env
       - POSTGRES_HOST=db
