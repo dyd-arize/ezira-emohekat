@@ -115,6 +115,8 @@ Here are the guidelines for the application:
         - [x] create an IAM user `actionbot` with ECR push access
         - [x] add secrets to repo secrets
     - [ ] docker + github actions cache builder stage dependencies
+    - docker compose doesn't load to github actions default image store, causing 'tag does not exist' even build successfully [doc](https://docs.docker.com/build/ci/github-actions/multi-platform/#build-and-load-multi-platform-images)
+        - [x] switch to docker/build-push-action with load=true
 - [x] create a new AWS account
     - manually init new AWS account
         - setup root MFA

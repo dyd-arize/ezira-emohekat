@@ -48,9 +48,13 @@ jobs:
         with:
           registry-type: public
 
-      # - name: Build Docker Image
-      #   run: |
-      #     cd webapp && make rebuild
+      - name: Get Build Info
+        id: get_build_info
+        run: |
+          IMAGE_FULL_TAG=$(yq '.services.web.image' ./webapp/docker-compose.yaml)
+          PLATFORMS=$(yq '.services.web.build.platforms | join(",")' ./webapp/docker-compose.yaml)
+          echo "IMAGE_FULL_TAG=$IMAGE_FULL_TAG" >> $GITHUB_OUTPUT
+          echo "PLATFORMS=$PLATFORMS" >> $GITHUB_OUTPUT
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -58,8 +62,5 @@ jobs:
           context: ./webapp
           push: true
           load: true
-          platforms: linux/amd64,linux/arm64
-          tags: public.ecr.aws/a5i1k0h2/arize-dev/webapp:v0.0.0
-      # - name: Push Docker Image to ECR
-      #   run: |
-      #     cd webapp && make ci-push
+          platforms: ${{ steps.get_build_info.outputs.PLATFORMS }}
+          tags: ${{ steps.get_build_info.outputs.IMAGE_FULL_TAG }}
