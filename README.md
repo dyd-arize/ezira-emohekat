@@ -54,6 +54,8 @@ Here are the guidelines for the application:
         - pre-commit hooks
         - ruff
         - github actions lint
+        - detect-secrets
+        - terraform fmt/lint
 - webapp improvement
     - [x] use poetry as package manager
         - generate pyproject.yaml
@@ -109,6 +111,7 @@ Here are the guidelines for the application:
         - [x] BUG, failure return incorrect status - fixe
 - [x] cross-platform image linux/amd64 and linux/arm64
 - [ ] CI push image with Github Actions
+    - [ ] create an IAM user with ECR push access
 - [x] create a new AWS account
     - manually init new AWS account
         - setup root MFA

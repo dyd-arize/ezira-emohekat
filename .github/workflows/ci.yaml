@@ -1,0 +1,32 @@
+name: Build & Push WebApp to ECR
+
+on:
+  workflow_dispatch:
+
+jobs:
+  push_to_ecr:
+    name: Build & Push WebApp to ECR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
+
+      - name: Build Docker Image
+        run: |
+          cd webapp && make rebuild
+
+      - name: Push Docker Image to ECR
+        run: |
+          cd webapp && make push
