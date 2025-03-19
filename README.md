@@ -108,10 +108,10 @@ Here are the guidelines for the application:
         - [x] insert csv to postgres sql
         - [x] with flower monitoring
         - [ ] reprocess failed job
-        - [x] BUG, failure return incorrect status - fixe
+        - [x] BUG, failure return incorrect status - fixed
 - [x] cross-platform image linux/amd64 and linux/arm64
 - [x] CI push image with Github Actions
-    - [ ] automate by terraform
+    - [ ] automate following tasks by terraform
         - [x] create an IAM user `actionbot` with ECR push access
         - [x] add secrets to repo secrets
     - [ ] docker + github actions cache builder stage dependencies
@@ -139,17 +139,16 @@ Here are the guidelines for the application:
                     - CIDR: `10.0.1.X/27, (32 - reserved) = 27 IPs` are enough
             - IGW, RT
         - [x] ECR, public registry
-            - [ ] add RBAC for ci/cd
         - [x] EKS, going to try [EKS Auto](https://docs.aws.amazon.com/eks/latest/best-practices/automode.html), since it's new
             - [x] control plane, v1.31
             - [ ] ~~cluster, worker nodes~~ going to use built-in node pools for now
                 - c6g.large system, c5a.large general-purpose
-                - [ ] roll back to only default public subnet for now, image pull error -> network issue TODO
+                - [ ] roll back to only default public subnet for now, image pull error -> network issue - doing
     - pre init cluster
         - [x] comes with metric-server
         - [x] gp3 storage class
         - [x] coredns
-        - not required, just for fun
+        - not required since port forwarding, but just for fun
             - [x] cert-manager + letsencrypt issuer
             - [ ] aws lb controller -> IMDS issue TODO
                     - create IAM policy
@@ -184,5 +183,5 @@ Here are the guidelines for the application:
             ```
             - then refresh the webapp, new records were ingested
         - [x] flower
-- CD with github actions, local test with act
+- [ ] CD with github actions, local test with act
 - make a diagram and documentation
