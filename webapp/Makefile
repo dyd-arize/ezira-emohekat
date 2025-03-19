@@ -20,3 +20,6 @@ push:
 	bash ./scripts/source.auth_ecr.sh
 	# or source ./scripts/source.auth_ecr.sh for later interactive use
 	docker compose push web
+
+ci-push:
+	docker compose push web

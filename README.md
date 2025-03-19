@@ -114,6 +114,7 @@ Here are the guidelines for the application:
     - [ ] automate by terraform
         - [x] create an IAM user `actionbot` with ECR push access
         - [x] add secrets to repo secrets
+    - [ ] docker + github actions cache builder stage dependencies
 - [x] create a new AWS account
     - manually init new AWS account
         - setup root MFA
