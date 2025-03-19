@@ -58,7 +58,7 @@ jobs:
           context: ./webapp
           push: true
           load: true
-          platform: linux/amd64,linux/arm64
+          platforms: linux/amd64,linux/arm64
           tags: public.ecr.aws/a5i1k0h2/arize-dev/webapp:v0.0.0
       # - name: Push Docker Image to ECR
       #   run: |
