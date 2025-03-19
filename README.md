@@ -5,7 +5,7 @@
 - [Action Items](#action-items)
 - [What's in here](#whats-in-here)
 - [Run on Docker](#run-on-docker)
-- [Run on AWS]
+- [Run on AWS](#run-on-aws)
 
 ## Action Items
 > It would be better if I have maken a Github project...
@@ -159,9 +159,9 @@
 ### Diagrams are more than words
 
 #### Infrastructure Diagram:
-![](./docs/infrastructure.drawio.png)
+![](http://github.com/dyd-arize/ezira-emohekat/blob/main/docs/infrastructure.drawio.png)
 #### Component Diagram:
-![](./docs/component.drawio.png)
+![](https://github.com/dyd-arize/ezira-emohekat/blob/main/docs/component.drawio.png)
 #### Project Structure
 
 ```
@@ -376,3 +376,5 @@ docker system prune -f
 # in $PROJECT_DIR/infrastructure/aws/
 tf destroy -var-file=./stage/dev.tfvars
 ```
+
+[Top](#table-of-contents)
