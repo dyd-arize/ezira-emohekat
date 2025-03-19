@@ -52,8 +52,14 @@ jobs:
         run: |
           cd webapp && make rebuild
 
-      - name: Push Docker Image to ECR
-        run: |
-          docker compose version
-          docker images
-          cd webapp && make ci-push
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./webapp
+          push: true
+          load: true
+          platform: linux/amd64,linux/arm64
+          tags: public.ecr.aws/a5i1k0h2/arize-dev/webapp:v0.0.0
+      # - name: Push Docker Image to ECR
+      #   run: |
+      #     cd webapp && make ci-push
