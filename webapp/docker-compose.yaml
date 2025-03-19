@@ -9,7 +9,7 @@ services:
     container_name: webapp-db
     restart: always
     env_file:
-      - .env
+      - postgres.env
     ports:
       - "5432:5432"
     healthcheck:
@@ -30,12 +30,12 @@ services:
         - linux/amd64
         - linux/arm64
     container_name: webapp
-    image: public.ecr.aws/a5i1k0h2/arize-dev/webapp:v0.0.0
+    image: &webimage public.ecr.aws/a5i1k0h2/arize-dev/webapp:v0.0.0
     restart: always
     env_file:
-      - .env
+      - webapp.env
     environment:
-      # Set to localhost in .env for local development without docker
+      # Override local development .env
       - POSTGRES_HOST=db
       - RABBITMQ_HOST=rabbitmq
       - REDIS_HOST=redis
@@ -55,7 +55,7 @@ services:
     container_name: minio
     command: server /data --console-address ":9001"
     env_file:
-      - .env
+      - minio.env
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -95,7 +95,7 @@ services:
     image: rabbitmq:3-management
     container_name: rabbitmq
     env_file:
-      - .env
+      - rabbitmq.env
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -120,13 +120,13 @@ services:
       timeout: 60s
 
   celery:
-    image: public.ecr.aws/a5i1k0h2/arize-dev/webapp:v0.0.0
+    image: *webimage
     container_name: celery
     restart: always
     env_file:
-      - .env
+      - celery.env
     environment:
-      # Set to localhost in .env for local development without docker
+      # Override local development .env
       - POSTGRES_HOST=db
       - RABBITMQ_HOST=rabbitmq
       - REDIS_HOST=redis
@@ -143,14 +143,14 @@ services:
       retries: 3
       timeout: 60s
 
-  flower:
-    image: public.ecr.aws/a5i1k0h2/arize-dev/webapp:v0.0.0
-    container_name: flower
+  cflower:
+    image: *webimage
+    container_name: cflower
     restart: always
     env_file:
-      - .env
+      - celery.env
     environment:
-      # Set to localhost in .env for local development without docker
+      # Override local development .env
       - POSTGRES_HOST=db
       - RABBITMQ_HOST=rabbitmq
       - REDIS_HOST=redis

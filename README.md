@@ -106,7 +106,7 @@ Here are the guidelines for the application:
         - [x] insert csv to postgres sql
         - [x] with flower monitoring
         - [ ] reprocess failed job
-        - [x] BUG, failure return incorrect status - fixed
+        - [x] BUG, failure return incorrect status - fixe
 - [x] cross-platform image linux/amd64 and linux/arm64
 - [ ] CI push image with Github Actions
 - [x] create a new AWS account

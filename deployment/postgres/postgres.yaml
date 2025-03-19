@@ -18,14 +18,20 @@ spec:
         - name: POSTGRES_DB
           value: webapp
         - name: POSTGRES_USER
-          value: postgres
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_USER
+              # k -n webapp create secret generic postgres-secrets --from-env-file=postgres.env
+              name: postgres-secrets
         - name: PGUSER
-          value: postgres
+          valueFrom:
+            secretKeyRef:
+              key: PGUSER
+              name: postgres-secrets
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
               key: POSTGRES_PASSWORD
-              # k -n webapp create secret generic postgres-secrets --from-env-file=postgres.env
               name: postgres-secrets
         - name: POD_IP
           valueFrom:

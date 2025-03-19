@@ -17,6 +17,7 @@ spec:
           image: public.ecr.aws/a5i1k0h2/arize-dev/webapp:v0.0.0
           ports:
             - containerPort: 5000
+          # for convenience, check example.env
           envFrom:
             - secretRef:
                 name: webapp-secrets
