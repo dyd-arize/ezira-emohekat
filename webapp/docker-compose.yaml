@@ -28,9 +28,9 @@ services:
       dockerfile: Dockerfile
       args:
         - PYVER=3.13
-      # platforms:
-      #   - linux/amd64
-      #   - linux/arm64
+      platforms:
+        - linux/amd64
+        - linux/arm64
     container_name: webapp
     image: &webimage public.ecr.aws/a5i1k0h2/arize-dev/webapp:v0.0.0
     restart: always
