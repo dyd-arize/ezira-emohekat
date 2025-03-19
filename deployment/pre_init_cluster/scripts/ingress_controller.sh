@@ -1,3 +1,6 @@
+#!/bin/bash
+set -euo pipefail
+echo "::INFO:: Installing Ingress Controller"
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx --force-update
 helm upgrade --install ingress-nginx ingress-nginx \
   --repo https://kubernetes.github.io/ingress-nginx \

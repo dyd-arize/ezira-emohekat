@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 [ -z $CLUSTER_NAME ] && echo '$CLUSTER_NAME is required' && exit 1
 
-echo "Installing AWS Load Balancer Controller..."
+echo "::INFO::Installing AWS Load Balancer Controller..."
 
 POLICY_NAME="AWSLoadBalancerControllerIAMPolicy"
 SERVICE_ACCOUNT_NAME="aws-load-balancer-controller"

@@ -215,7 +215,9 @@ override.tf.json
 terraform.rc
 
 ####################################################
+.DS_Store
 .vscode/
 
 *.env
 !example*.env
+!example.tfvars

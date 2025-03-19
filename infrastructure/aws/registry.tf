@@ -1,4 +1,4 @@
-module "ecr_public" {
+module "public_ecr" {
   source = "terraform-aws-modules/ecr/aws"
   providers = {
     aws = aws.east

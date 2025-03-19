@@ -23,6 +23,7 @@ module "vpc" {
     "arize-${var.tag_environment}-public-us-west-1a",
     "arize-${var.tag_environment}-public-us-west-1b",
   ]
+  map_public_ip_on_launch = true
 
   create_igw = true
 
