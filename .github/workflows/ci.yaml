@@ -1,6 +1,11 @@
 name: Build & Push WebApp to ECR
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'webapp/**'
   workflow_dispatch:
 
 jobs:
@@ -45,4 +50,5 @@ jobs:
 
       - name: Push Docker Image to ECR
         run: |
+          docker images
           cd webapp && make ci-push
