@@ -159,7 +159,7 @@
 ### Diagrams are more than words
 
 #### Infrastructure Diagram:
-![](http://github.com/dyd-arize/ezira-emohekat/blob/main/docs/infrastructure.drawio.png)
+![](https://github.com/dyd-arize/ezira-emohekat/blob/main/docs/infrastructure.drawio.png)
 #### Component Diagram:
 ![](https://github.com/dyd-arize/ezira-emohekat/blob/main/docs/component.drawio.png)
 #### Project Structure
