@@ -50,5 +50,6 @@ jobs:
 
       - name: Push Docker Image to ECR
         run: |
+          docker compose version
           docker images
           cd webapp && make ci-push
