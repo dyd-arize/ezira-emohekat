@@ -24,7 +24,7 @@ jobs:
           curl -L https://github.com/docker/docker-credential-helpers/releases/download/v0.9.3/docker-credential-pass-v0.9.3.linux-amd64 \
             -o /usr/local/bin/docker-credential-pass
           chmod +x /usr/local/bin/docker-credential-pass
-
+          echo '{"credsStore": "pass"}' > ~/.docker/config.json
       - name: Set up Docker
         uses: docker/setup-docker-action@v4
         with:
@@ -32,8 +32,7 @@ jobs:
             {
               "features": {
                 "containerd-snapshotter": true
-              },
-              "credsStore": "pass"
+              }
             }
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
