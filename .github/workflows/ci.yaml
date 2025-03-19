@@ -48,9 +48,9 @@ jobs:
         with:
           registry-type: public
 
-      - name: Build Docker Image
-        run: |
-          cd webapp && make rebuild
+      # - name: Build Docker Image
+      #   run: |
+      #     cd webapp && make rebuild
 
       - name: Build and push
         uses: docker/build-push-action@v6
